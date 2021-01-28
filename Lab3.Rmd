@@ -1,0 +1,100 @@
+---
+title: "Lab 3"
+author: "VC"
+date: "27/01/2021"
+output: html_document
+---
+
+
+```{r}
+library(readr)
+gsp <- read_csv("chapter6data.csv.")
+```
+
+
+```{r}
+library(gsheet)
+locations <- https://docs.google.com/spreadsheets/d/1nehKEBKTQx11LZuo5ZJFKTVS0p5y1ysMPSOSX_m8dS8/edit#gid=0
+```
+
+
+
+```{r}
+gdp3 <- wideData %>% 
+  pivot_longer(!c(year, tableCode, countryCode), names_to = "isicCode", values_to = "value")
+```
+
+
+
+```{r}
+gdp3 <- gdp2 %>% 
+  pivot_longer(!c(country), names_to = "year", values_to = "gdp")
+```
+
+
+
+```{r}
+# Loading the gsheet package
+library(gsheet)
+# Read data from the URL
+dataUnido <- gsheet::gsheet2tbl("https://docs.google.com/spreadsheets/d/1uLaXke-KPN28-ESPPoihk8TiXVWp5xuNGHW7w7yqLCc/edit#gid=416085055")
+# erasing non important variables
+dataUnido$isicCodeCombinaison <- NULL
+dataUnido$tableDefinitionCode <- NULL
+dataUnido$sourceCode <- NULL
+dataUnido$updateYear <- NULL
+dataUnido$unit <- NULL
+```
+
+
+
+```{r}
+# Loading the dplyr package
+library(tidyverse)
+# Dataset for dataCanada
+dataCanada131 <- filter(dataUnido, countryCode == 76)
+dataCanada131 <- filter(dataCanada131, isicCode == 131)
+dataCanada131 <- filter(dataCanada131, tableCode == 4)
+dataCanada131 <- filter(dataCanada131, year > 2008)
+dataCanada131 <- dataCanada131 %>%
+  pivot_wider(names_from = isicCode, values_from = value)
+head(dataCanada131)
+```
+
+
+
+```{r}
+dataCanada181 <- filter(dataUnido, countryCode == 76)
+dataCanada181 <- filter(dataCanada181, isicCode == 181)
+dataCanada181 <- filter(dataCanada181, tableCode == 4)
+dataCanada181 <- filter(dataCanada181, year > 2008)
+dataCanada181 <- dataCanada181 %>%
+  pivot_wider(names_from = isicCode, values_from = value)
+head(dataCanada181)
+```
+
+
+
+```{r}
+# Merging 2 datasets
+dataCanadaFull <- left_join(dataCanada131, dataCanada181, c("year","tableCode","countryCode"))
+# First 6 lines
+head(dataCanadaFull)
+```
+
+
+
+```{r}
+dataCanadaFullLong <- dataCanadaFull %>% 
+  pivot_longer(!c(year, tableCode, countryCode), names_to = "isicCode", values_to = "value")
+```
+
+
+```{r}
+gdp4 <- left_join(gdp3, locations, c("country"))
+```
+
+
+dataCanadaFullLong <- readr::read_csv("./data/dataCanadaFullLong.csv")
+
+
