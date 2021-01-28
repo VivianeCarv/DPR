@@ -1,0 +1,32 @@
+---
+title: "Lab 3 visualization"
+author: "VC"
+date: "27/01/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+dataCanadaFullLong <- readr::read_csv("./data/dataCanadaFullLong.csv")
+dataCanadaFullLong$isicCode <- as.character(dataCanadaFullLong$isicCode)
+```
+
+```{r}
+# Produce a bar chart
+library(ggplot2)
+library(ggthemes)
+ggplot(data = dataCanadaFullLong, aes(x = year, y = value, fill = isicCode)) + 
+  geom_bar(stat = "identity", width = 0.5, position = "dodge") + 
+  xlab("") +
+  ylab("Number of employees")  +
+  labs(fill = "Isic Code")  +  
+  theme_minimal() + 
+  scale_fill_brewer(direction = -1)
+```
+
+
+
+
